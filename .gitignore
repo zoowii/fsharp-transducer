@@ -1,0 +1,12 @@
+/obj
+/bin
+/build
+/out
+/target
+/dist
+/tmp
+/log
+/*.log
+*~
+/.vs
+/.vscode
