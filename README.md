@@ -18,10 +18,12 @@ demo transducer implementation for F#
 			let itemStr = item.ToString()
 			xf (Folds.Step(prefix + ":" + itemStr, acc))
 
-	let conj b a = b @ [a]
+	let conj b a = [a] @ b
     let list1 = [1; 2; 3; 4; 5]
     let a = Folds.transduce (strTransducer "hi") conj [] list1
     let mystrTrans1 = strTransducer "hi1"
     let mystrTrans2 = strTransducer "hi2"
     let b = Folds.transduce (Folds.comp mystrTrans1 mystrTrans2) conj [] list1
-    printfn "a=%A, b=%A" a b
+    let c = Folds.eduction (strTransducer "hi") list1
+    let d = Folds.into ["hello"] (strTransducer "hi") list1
+    printfn "a=%A, b=%A, c=%A, d=%A" a b c d
