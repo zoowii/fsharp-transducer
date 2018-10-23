@@ -1,7 +1,7 @@
 fsharp-transducer
 =========================
 
-demo transducer implementation for F#
+transducer implementation for F#
 
 # Introduction
 
