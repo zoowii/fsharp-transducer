@@ -3,6 +3,10 @@ fsharp-transducer
 
 demo transducer implementation for F#
 
+# Introduction
+
+* This is a F# implementation of Clojure's transducer lib
+* Clojure's transducer: [https://clojure.org/reference/transducers](https://clojure.org/reference/transducers)
 
 # Usage
 
@@ -22,6 +26,9 @@ demo transducer implementation for F#
     let mystrTrans1 = strTransducer "hi1"
     let mystrTrans2 = strTransducer "hi2"
     let b = transduce (comp mystrTrans1 mystrTrans2) conj [] list1
-    let c = eduction (strTransducer "hi") list1
+    let c = eduction (strTransducer "hi") list1 // eduction returns a lazy seq
+    Seq.iteri (fun index item ->
+        printfn "c[%d]=%A" index item
+    ) c
     let d = into ["hello"] (strTransducer "hi") list1
     printfn "a=%A, b=%A, c=%A, d=%A" a b c d

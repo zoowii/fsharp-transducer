@@ -48,26 +48,29 @@ module Folds =
         transduce transducer reducingFunc result source
 
     let eduction (transducer: Transducer<'a, 'b, 'c>) (source: #seq<'a>) =
-        // TODO: change to return lazy seq, seq {}
         use enumer = source.GetEnumerator()
-        let reducingFunc acc input = acc @ [input]
+        let reducingFunc acc input = [input]
         let xf (transArgs: TransducerArgs<'c, 'b>) = 
             match transArgs with
             | Init -> Continue []
-            | Complete acc -> Reduced acc
+            | Complete acc -> Reduced []
             | Step(input, acc) ->
                 Continue (reducingFunc acc input)
         let rec loop (state_result: 'b) =
-            match enumer.MoveNext() with
-            | false -> 
-                state_result
-            | true      ->
-                let cur = enumer.Current
-                let step = Step(cur, state_result)
-                let result = transducer xf step
-                match result with
-                | Reduced x -> x
-                | Continue x -> loop x
+            seq {
+                match enumer.MoveNext() with
+                | false -> ignore null
+                | true      ->
+                    let cur = enumer.Current
+                    let step = Step(cur, state_result)
+                    let result = transducer xf step
+                    match result with
+                    | Reduced x ->
+                        yield! x
+                    | Continue x -> 
+                        yield! x
+                        yield! (loop x)
+            }
         loop []
     
     let inline foldl (stepfn:'b->'a->'b)(acc:'b)(coll:#seq<'a>) : 'b = 

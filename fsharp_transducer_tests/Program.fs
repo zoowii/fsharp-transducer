@@ -18,7 +18,10 @@ let main argv =
     let mystrTrans1 = strTransducer "hi1"
     let mystrTrans2 = strTransducer "hi2"
     let b = transduce (comp mystrTrans1 mystrTrans2) conj [] list1
-    let c = eduction (strTransducer "hi") list1
+    let c = eduction (strTransducer "hi") list1 // eduction returns a lazy seq
+    Seq.iteri (fun index item ->
+        printfn "c[%d]=%A" index item
+    ) c
     let d = into ["hello"] (strTransducer "hi") list1
     printfn "a=%A, b=%A, c=%A, d=%A" a b c d
     0 // return an integer exit code
