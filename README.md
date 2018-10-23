@@ -27,13 +27,20 @@ demo transducer implementation for F#
     let mystrTrans1 = strTransducer "hi1"
     let mystrTrans2 = strTransducer "hi2"
     let b = transduce (comp mystrTrans1 mystrTrans2) conj [] list1 // ["hi2:hi1:5"; "hi2:hi1:4"; "hi2:hi1:3"; "hi2:hi1:2"; "hi2:hi1:1"]
-    let c = eduction (strTransducer "hi") list1 // eduction returns a lazy seq, c=seq("hi:1", "hi:2", "hi:3", "hi:4", "hi:5")
+    let c = sequence (strTransducer "hi") list1 // sequence returns a cached lazy seq, c=cached-seq("hi:1", "hi:2", "hi:3", "hi:4", "hi:5")
     Seq.iteri (fun index item ->
         printfn "c[%d]=%A" index item
     ) c
     Seq.iteri (fun index item ->
         printfn "c[%d]=%A" index item
     ) c
+    let c2 = eduction (strTransducer "hi") list1 // eduction returns a lazy seq, c2=seq("hi:1", "hi:2", "hi:3", "hi:4", "hi:5")
+    Seq.iteri (fun index item ->
+        printfn "c2[%d]=%A" index item
+    ) c2
+    Seq.iteri (fun index item ->
+        printfn "c2[%d]=%A" index item
+    ) c2
     let d = into ["hello"] (strTransducer "hi") list1 // ["hello"; "hi:1"; "hi:2"; "hi:3"; "hi:4"; "hi:5"]
     let e = into [0] (filter isOdd) list1 // [0; 1; 3; 5]
     let f = into ["map-demo"] (comp mystrTrans1 (map (fun x->"map-"+x))) list1 // ["map-demo"; "map-hi1:1"; "map-hi1:2"; "map-hi1:3"; "map-hi1:4"; "map-hi1:5"]

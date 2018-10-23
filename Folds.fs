@@ -76,7 +76,8 @@ module Folds =
             }
         loop []
 
-    let sequence = eduction // sequence now plays like eduction. TODO: cache its result
+    let sequence transducer (source: #seq<'a>) =
+        Seq.cache (eduction transducer source)
     
     let inline foldl (stepfn:'b->'a->'b)(acc:'b)(coll:#seq<'a>) : 'b = 
         use enumer = coll.GetEnumerator()
